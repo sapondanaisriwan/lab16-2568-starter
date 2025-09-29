@@ -59,3 +59,8 @@ export const zEnrollmentBody = z.object({
   studentId: zStudentId,
   courseId: zCourseId,
 });
+
+export const zLoginBody = z.object({
+  username: z.string().trim().min(1),
+  password: z.string().trim().min(1),
+});

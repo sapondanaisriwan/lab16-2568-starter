@@ -1,4 +1,10 @@
-# Lecture 18 - RESTful API (Part 3)
+# Lecture 16 - RESTful API (Part 3)
+
+
+###  ป้อนข้อมูลนักศึกษา
+รหัส นศ.: 670610738
+
+ชื่อ-สกุล : สพลดนัย ศรีวรรณ์
 
 ### Content
 

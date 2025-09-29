@@ -6,6 +6,7 @@ import { handleRes } from "../utils/handleRes.js";
 
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import type { CustomRequest } from "../libs/types.js";
 dotenv.config();
 
 export const userLogin = (req: Request, res: Response) => {
@@ -45,47 +46,20 @@ export const userLogin = (req: Request, res: Response) => {
   }
 };
 
-export const userLogout = (req: Request, res: Response) => {
+export const userLogout = (req: CustomRequest, res: Response) => {
   try {
-    const authHeader = req.headers.authorization;
+    const user = req.user;
+    const token = req.token;
 
-    // 1. check Request if "authorization" header exists
-    //    and container "Bearer ...JWT-Token..."
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return handleRes(
-        req,
-        res,
-        401,
-        false,
-        "Authorization header is not found"
-      );
+    if (!user || !token) {
+      return handleRes(req, res, 401, false, "Invalid token or user");
     }
 
-    // 2. extract the "...JWT-Token..." if available
-    const token = authHeader.split(" ")[1];
+    // if token exists, remove the token from user.tokens
+    delete req.user;
+    delete req.token;
 
-    if (!token) {
-      return handleRes(req, res, 401, false, "Token is required");
-    }
-
-    // 3. verify token using JWT_SECRET_KEY and get payload (username, studentId and role)
-    const jwtKey = process.env.JWT_SECRET || "JustSayLove";
-    jwt.verify(token, jwtKey, (err, decoded) => {
-      if (err) {
-        return handleRes(req, res, 403, false, "Invalid or expired token");
-      }
-      console.log(decoded);
-    });
-
-    // 4. check if user exists (search with username)
-
-    // 5. proceed with logout process and return HTTP response
-    //    (optional: remove the token from User data)
-
-    return res.status(500).json({
-      success: false,
-      message: "POST /api/v2/users/logout has not been implemented yet",
-    });
+    return handleRes(req, res, 200, true, "Logout successfully 🥳");
   } catch (err) {
     return handleError(req, res, err);
   }

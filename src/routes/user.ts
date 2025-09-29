@@ -1,12 +1,8 @@
 import { Router, type Request, type Response } from "express";
-
-import type { User, CustomRequest } from "../libs/types.js";
-
 // import database
 import { users, reset_users } from "../db/db.js";
-import { zLoginBody } from "../libs/zodValidators.js";
-import { handleError } from "../utils/handleError.js";
 import { userLogin, userLogout } from "../controller/user.controller.js";
+import { authCheck } from "../middlewares/middelware.js";
 
 const router = Router();
 
@@ -31,7 +27,7 @@ router.get("/", (req: Request, res: Response) => {
 router.post("/login", userLogin);
 
 // POST /api/v2/users/logout
-router.post("/logout", userLogout);
+router.post("/logout", authCheck, userLogout);
 
 // POST /api/v2/users/reset
 router.post("/reset", (req: Request, res: Response) => {
